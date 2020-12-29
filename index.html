@@ -1,0 +1,93 @@
+<style>
+
+*{
+    margin: 10px;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    margin: auto;
+}
+
+.col{
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    text-align: center;
+    margin: auto;
+}
+button{
+    margin: auto;
+    width: 200px;
+}
+
+</style>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Cosmerudia Quiz Gen</title>
+    </head>
+    <body onload="load();">
+        <div class="col">
+            <h1>Enter your question below :</h1>
+            <div class="row"> <label>Question : </label> <input type="text" id="text" style="width:50em;"/> </div>
+            <div class="row"> <label>Font-size : </label> <input type="number" id="font_size" value="55" min="10" max="80" style="width:5em;"/> </div>
+            <button onclick="gen();">Generate</button>
+            <a id="link" href="" download="" onclick="download_img(this);">Download</a>
+        </div>
+        <canvas id="canvas" width="1280" height="720"></canvas>
+        <img id="bg" src="background.png" style="display: none;" />
+    </body>
+</html>
+
+
+<script>
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+function load(){
+    ctx.drawImage(document.getElementById("bg"), 0, 0, 1280, 720);
+}
+
+download_img = function(el) {
+    var canvas = document.getElementById("canvas");
+    var image = canvas.toDataURL("image/jpg");
+    el.href = image;
+};
+
+
+function gen(){
+    ctx.drawImage(document.getElementById("bg"), 0, 0, 1280, 720);
+    var fs=parseInt(document.getElementById("font_size").value)
+    ctx.font = ""+fs+"px sans-serif";
+    var txt = document.getElementById("text").value;
+    var largeur = 30;
+    var txts=[];
+    var ts = txt.split(" ");
+    var i = 0;
+    var n = 0;
+    for(i=0; i<ts.length; i++){
+        if(txts.length<=n){
+            txts.push("");
+        }
+        else if(txts[n].length>largeur){
+            txts.push("");
+            n+=1;
+        }
+        txts[n]+=ts[i]+" ";
+    }
+    var i = 0;
+    for(t of txts){
+        x = 640-t.length*fs/4.5;
+        y = 350+i*fs;
+        ctx.fillText(t, x, y);
+        i+=1;
+    }
+    document.getElementById("link").download = ts.join("")+".jpg";
+}
+
+</script>
